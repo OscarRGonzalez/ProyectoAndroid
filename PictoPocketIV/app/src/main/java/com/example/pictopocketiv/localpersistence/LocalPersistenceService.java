@@ -322,6 +322,34 @@ public class LocalPersistenceService {
         void onFailure(Throwable t);
     }
 
+
+    /** get DB populated **/
+    public static void isPopulatedDB(
+            Context context, String packageName, String locale,
+            int resolution, OnPopulateDB onPopulateDB) {
+        // On check if DB is already populated.
+        // If false, launch DB population
+        IsPopulatedAsync.OnResponse onPopulatedResponse =
+                populated -> {
+                    if(!populated) {    // if not populated
+                        if(onPopulateDB != null) {
+                            onPopulateDB.onSuccess(false);
+                        }
+                    } else {
+                        if(onPopulateDB != null) {
+                            onPopulateDB.onSuccess(true);
+                        }
+                    }
+                };
+
+        // Task
+        IsPopulatedAsync isPopulatedSync =
+                new IsPopulatedAsync(onPopulatedResponse);
+        // Exec Task:
+        isPopulatedSync.execute();  // async
+    }
+
+
     public static void populateDB(
             Context context, String packageName, String locale,
             int resolution, OnPopulateDB onPopulateDB, String populatorPack ) {

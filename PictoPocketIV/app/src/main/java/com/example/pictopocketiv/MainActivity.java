@@ -149,12 +149,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Auth State changed");
 
             if(firebaseAuth.getCurrentUser() != null) {
-                /*if(mActivityMV.getState().getValue() != MainActivityStateMV.ActivityState.W_DB_POPULATION) {
-                    mActivityMV.setState(MainActivityStateMV.ActivityState.W_DB_POPULATION);
-                    Log.d(TAG, "Logged");*/
-                if(mActivityMV.getState().getValue() != MainActivityStateMV.ActivityState.CHOOSE_POPULATION) {
-                    mActivityMV.setState(MainActivityStateMV.ActivityState.CHOOSE_POPULATION);
-                    Log.d(TAG, "Logged");
+                if(mActivityMV.getState().getValue() != MainActivityStateMV.ActivityState.W_DB_POPULATION) {
+                    isPopulatorPackSet();
                 }
             } else {
                 if(mActivityMV.getState().getValue() !=
@@ -230,6 +226,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void isPopulatorPackSet() {
+        boolean isSet = false;
+        // If empty DB try to populate
+        // Use this to check the response
+        LocalPersistenceService.OnPopulateDB onDBPopulated =
+                new LocalPersistenceService.OnPopulateDB() {
+                    @Override
+                    public void onSuccess(boolean updated) {
+                        //mActivityMV.setStatus(MainActivityStateMV.Signal.OK);
+                        if(updated) {
+                            Log.d(TAG, "DB Populated**********************");
+                            mActivityMV.setState(MainActivityStateMV.ActivityState.W_DB_POPULATION);
+                        }
+                        else {
+                            Log.d(TAG, "DB NO Populted*********************");
+                            mActivityMV.setState(MainActivityStateMV.ActivityState.CHOOSE_POPULATION);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        //mActivityMV.setStatus(MainActivityStateMV.Signal.KO);
+                        Log.e(TAG,t.getMessage());
+                    }
+                };
+        LocalPersistenceService.isPopulatedDB(this,getPackageName(),"es",500, onDBPopulated);
+    }
+
     private void goChoosePopulation() {
         // cargar fragmento de ventana choose population y que se mantenga hata recibir la respuesta de esa ventana, que es el boton que fue presionado
         FragmentTransaction ft = mFramesMan.beginTransaction();
@@ -267,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goDBPopulation() {
-
         FragmentTransaction ft = mFramesMan.beginTransaction();
         WaitingFragment waitingFragmentFF = WaitingFragment.newInstance("Cargando pictos...");
         ft.replace(R.id.main_frame_layout, waitingFragmentFF);
@@ -285,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 mActivityMV.setStatus(MainActivityStateMV.Signal.OK);
                 if(updated)
                     Log.d(TAG,"DB Populated");
+
                 else
                     Log.d(TAG,"DB NO Populted");
             }
@@ -296,8 +320,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         // Wait to populate before go next state
-        LocalPersistenceService.populateDB(
-                this,getPackageName(),"es",500, onDBPopulated, mPopulatorPack);
+        LocalPersistenceService.populateDB(this,getPackageName(),"es",500, onDBPopulated, mPopulatorPack);
+
     }
 
     private void goError() {
