@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel;
 public class MainActivityStateMV extends ViewModel {
 
 
+
+
     /** ENUMS **/
     // State Machine Signal enum
     public enum Signal {
@@ -19,6 +21,8 @@ public class MainActivityStateMV extends ViewModel {
     public enum ActivityState {
 
         CH_AUTH_STATE,  // checking auth state
+
+        CHOOSE_POPULATION,  // choose population fragment
 
         W_DB_POPULATION,    // Waiting for db population
         LOGGED_IN,

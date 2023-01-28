@@ -31,6 +31,7 @@ import com.example.pictopocketiv.forms.AccessFormFragment;
 import com.example.pictopocketiv.forms.MsgFormFragment;
 import com.example.pictopocketiv.forms.SignupFormFragment;
 import com.example.pictopocketiv.forms.WaitingFragment;
+import com.example.pictopocketiv.localpersistence.ChoosePopulationFragment;
 import com.example.pictopocketiv.localpersistence.LocalPersistenceService;
 import com.example.pictopocketiv.states.MainActivityStateMV;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private AccessFormFragment mAccessFormFF;
     private SignupFormFragment mSignupFormFF;
     private WaitingFragment mWaitingFormFF;
+    private ChoosePopulationFragment mChoosePopulationFF;
 
     /** Bottom Menu **/
     private BottomSheetBehavior<ConstraintLayout> mToolsBh;
@@ -102,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAccessFormFF = AccessFormFragment.newInstance();
         mSignupFormFF = SignupFormFragment.newInstance();
+        mChoosePopulationFF = ChoosePopulationFragment.newInstance();
         mWaitingFormFF = WaitingFragment.newInstance("Por favor, espera");
     }
 
@@ -143,8 +146,11 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Auth State changed");
 
             if(firebaseAuth.getCurrentUser() != null) {
-                if(mActivityMV.getState().getValue() != MainActivityStateMV.ActivityState.W_DB_POPULATION) {
+                /*if(mActivityMV.getState().getValue() != MainActivityStateMV.ActivityState.W_DB_POPULATION) {
                     mActivityMV.setState(MainActivityStateMV.ActivityState.W_DB_POPULATION);
+                    Log.d(TAG, "Logged");*/
+                if(mActivityMV.getState().getValue() != MainActivityStateMV.ActivityState.CHOOSE_POPULATION) {
+                    mActivityMV.setState(MainActivityStateMV.ActivityState.CHOOSE_POPULATION);
                     Log.d(TAG, "Logged");
                 }
             } else {
@@ -197,6 +203,9 @@ public class MainActivity extends AppCompatActivity {
             case W_SIGNUP_CREDENTIALS:
                 goSignup();
                 break;
+            case CHOOSE_POPULATION:
+                goChoosePopulation();
+                break;
             case W_DB_POPULATION:
                 goDBPopulation();
                 break;
@@ -217,6 +226,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void goChoosePopulation() {
+        // cargar fragmento de ventana choose population y que se mantenga hata recibir la respuesta de esa ventana, que es el boton que fue presionado
+        FragmentTransaction ft = mFramesMan.beginTransaction();
+        ft.replace(R.id.main_frame_layout, mChoosePopulationFF);
+        ft.commit();
+
+        // agregar listener a los botones mPopulationBasic o mPopulationDefault
+        // y que en el listener se llame a la funcion que corresponda
+        mChoosePopulationFF.setListener(new ChoosePopulationFragment.ChoosePopulationListener() {
+            @Override
+            public void onBasicPopulation() {
+                goBasicPopulation();
+            }
+
+            @Override
+            public void onDefaultPopulation() {
+                goDefaultPopulation();
+            }
+        });
+
+    }
+
+    private void goBasicPopulation() {
+        // imprimir en el logcat que esta detnro de la funcion goBasicPopulation
+        Log.d(TAG, "goBasicPopulation");
+    }
+
+    private void goDefaultPopulation() {
+        // imprimir en el logcat que esta detnro de la funcion goDefaultPopulation
+        Log.d(TAG, "goDefaultPopulation");
+    }
+
 
     /** ACTIVITY ACTIONS **/
     private void goCheckAuthState() {
@@ -226,6 +267,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goDBPopulation() {
+
+
+
         FragmentTransaction ft = mFramesMan.beginTransaction();
         WaitingFragment waitingFragmentFF = WaitingFragment.newInstance("Cargando pictos...");
         ft.replace(R.id.main_frame_layout, waitingFragmentFF);

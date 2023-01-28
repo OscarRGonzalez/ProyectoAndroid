@@ -35,6 +35,23 @@
         <item name="android:layout_marginEnd">8dp</item>
     </style>
 
+    <!-- Choose population styles -->
+    <style name="choose_population_btn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="population_title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textColor">@color/secondaryLightColor</item>
+    </style>
+
+
     <!-- Dashed border -->
     <style name="dashed_border_style">
         <item name="android:layout_width">match_parent</item>

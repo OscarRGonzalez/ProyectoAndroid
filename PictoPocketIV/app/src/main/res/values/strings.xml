@@ -8,6 +8,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="access_title">Accesso</string>
+    <string name="choose_population_title">Elige un paquete inicial de pictos</string>
+    <string name="choose_population_btn_default">Por defecto | 50 pictos</string>
+    <string name="choose_population_btn_basico">Basico | 20 pictos</string>
     <string name="your_email">Tu e-mail</string>
     <string name="your_password">Tu contraseña</string>
     <string name="access">acceder</string>
