@@ -324,7 +324,7 @@ public class LocalPersistenceService {
 
     public static void populateDB(
             Context context, String packageName, String locale,
-            int resolution, OnPopulateDB onPopulateDB ) {
+            int resolution, OnPopulateDB onPopulateDB, String populatorPack ) {
 
         // On check if DB is already populated.
         // If false, launch DB population
@@ -338,7 +338,7 @@ public class LocalPersistenceService {
                                     context,
                                     locale,
                                     resolution,
-                                    packageName);
+                                    packageName, populatorPack);
 
                             AddUpdateAsync addUpdateSync =
                                     new AddUpdateAsync();

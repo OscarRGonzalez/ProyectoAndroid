@@ -116,23 +116,5 @@ public class ChoosePopulationFragment extends Fragment {
     }
 
 
-    /** Listeners **/
-    private View.OnClickListener onPopulationDefault = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //mActivityMV.setPopulation("default");
-            //mActivityMV.setIsLoggedIn(true);
-            // print the current population
-
-        }
-    };
-
-    private View.OnClickListener onPopulationBasic = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //mActivityMV.setPopulation("basic");
-            //mActivityMV.setIsLoggedIn(true);
-        }
-    };
 
 }

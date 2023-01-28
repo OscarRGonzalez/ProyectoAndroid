@@ -67,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton mUnlockActionsBtn;
     private ConstraintLayout mToolsLayout;
 
+    /** Populators **/
+    private String mPopulatorPack;
+
 
     /** LIFECYCLE **/
     @Override
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
     /** LOCAL PERSISTENCE **/
     private void setLocalPersistence() {
         LocalPersistenceService.init(this,"db_pictos_db");    // local persistence
+        mPopulatorPack = "welcome_pictos_bundle.json";
     }
 
 
@@ -237,26 +241,22 @@ public class MainActivity extends AppCompatActivity {
         mChoosePopulationFF.setListener(new ChoosePopulationFragment.ChoosePopulationListener() {
             @Override
             public void onBasicPopulation() {
-                goBasicPopulation();
+                mPopulatorPack = "welcome_pictos_bundle1.json";
+                Log.d(TAG, "goBasicPopulation");
+                mActivityMV.setState(MainActivityStateMV.ActivityState.W_DB_POPULATION);
             }
 
             @Override
             public void onDefaultPopulation() {
-                goDefaultPopulation();
+                mPopulatorPack = "welcome_pictos_bundle.json";
+                Log.d(TAG, "goDefaultPopulation");
+                mActivityMV.setState(MainActivityStateMV.ActivityState.W_DB_POPULATION);
+
             }
         });
 
     }
 
-    private void goBasicPopulation() {
-        // imprimir en el logcat que esta detnro de la funcion goBasicPopulation
-        Log.d(TAG, "goBasicPopulation");
-    }
-
-    private void goDefaultPopulation() {
-        // imprimir en el logcat que esta detnro de la funcion goDefaultPopulation
-        Log.d(TAG, "goDefaultPopulation");
-    }
 
 
     /** ACTIVITY ACTIONS **/
@@ -267,8 +267,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goDBPopulation() {
-
-
 
         FragmentTransaction ft = mFramesMan.beginTransaction();
         WaitingFragment waitingFragmentFF = WaitingFragment.newInstance("Cargando pictos...");
@@ -299,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
         };
         // Wait to populate before go next state
         LocalPersistenceService.populateDB(
-                this,getPackageName(),"es",500, onDBPopulated);
+                this,getPackageName(),"es",500, onDBPopulated, mPopulatorPack);
     }
 
     private void goError() {

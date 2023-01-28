@@ -57,9 +57,9 @@ public class Populator {
     public static void welcomePopulate(
             Context context, String locale,
             int resolution,
-            String packageName) throws IOException, ExecutionException, InterruptedException {
+            String packageName, String populatorPack) throws IOException, ExecutionException, InterruptedException {
 
-        CategorizedPictosList catList = readWelcomePictos(context);
+        CategorizedPictosList catList = readWelcomePictos(context, populatorPack);
 
         for (CategorizedPictos pictoCat : catList.pictoCats) {
 
@@ -78,13 +78,13 @@ public class Populator {
         }
     }
 
-    public static Populator.CategorizedPictosList readWelcomePictos(Context context)
+    public static Populator.CategorizedPictosList readWelcomePictos(Context context, String populatorPack)
             throws IOException {
 
         AssetManager assman = context.getAssets();
         InputStream istream = null;
 
-        istream = assman.open("welcome_pictos_bundle.json");
+        istream = assman.open(populatorPack);
 
         BufferedReader buffReader = new BufferedReader(
                 new InputStreamReader(istream));
