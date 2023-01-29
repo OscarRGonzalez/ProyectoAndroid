@@ -71,9 +71,25 @@ public class Populator {
                     new LocalPersistenceService.AddCategoryInfoAsync();
 
             addCategoryInfoAsync.execute(categoryInfo).get();   // Sync
+            boolean isMale = true;
+            if (pictoCat.label.equals("Emociones")) {
+                if (isMale) {
+                    for (int pictoId : pictoCat.ids) {
+                        LocalPersistenceService.downloadAddPicto(pictoId, locale, resolution, categoryInfo.id, packageName);
+                    }
+                }
+                else {
+                    int ids[] = {37998, 35592, 30964, 25823, 28705, 10192, 11951, 6992, 28671, 11959, 28635, 26928, 27703, 37828, 32329, 28671, 31095, 28709, 28647};
+                    for (int pictoId : ids) {
+                        LocalPersistenceService.downloadAddPicto(pictoId, locale, resolution, categoryInfo.id, packageName);
+                    }
+                }
 
-            for (int pictoId : pictoCat.ids) {
-                LocalPersistenceService.downloadAddPicto(pictoId, locale, resolution, categoryInfo.id, packageName);
+            }
+            else {
+                for (int pictoId : pictoCat.ids) {
+                    LocalPersistenceService.downloadAddPicto(pictoId, locale, resolution, categoryInfo.id, packageName);
+                }
             }
         }
     }

@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.example.pictopocketiv.R;
 import com.example.pictopocketiv.arasaac.ArasaacModel;
@@ -41,6 +43,9 @@ public class PictoSearchFragment extends Fragment {
     private ImageButton mCancelBtn;
     private PictoSearchResultAdapter mAdapter;
     private AppCompatActivity mActivity;
+    private RadioGroup mRadioGroup;
+    private RadioButton mRadioButtonMale;
+    private RadioButton mRadioButtonFemale;
 
     public PictoSearchFragment() {
         // Required empty public constructor
@@ -102,6 +107,9 @@ public class PictoSearchFragment extends Fragment {
         mSearchBtn = view.findViewById(R.id.submit_pictos_search);
         ImageButton mSaveBtn = view.findViewById(R.id.submit_pictos_save);
         mCancelBtn = view.findViewById(R.id.submit_pictos_cancel);
+
+        mRadioButtonMale = (RadioButton) view.findViewById(R.id.male);
+        mRadioButtonFemale = (RadioButton) view.findViewById(R.id.female);
     }
 
     private void setListenersUI() {
@@ -154,12 +162,50 @@ public class PictoSearchFragment extends Fragment {
 
             // Task execution (async)
             List<ArasaacModel.Pictogram> pictograms = getPictogramsBySearchTerm.execute(term).get();
-            mResults.clear();   // clear old results
-
+            mResults.clear();// clear old results
             // dump results
             for (ArasaacModel.Pictogram pictogram : pictograms) {
-                mResults.add(pictogram);
-                Log.d(TAG,pictogram.toString());
+                List<String> categories = pictogram.categories;
+                boolean gender = true;// CAMBIAR -> hombre = 1, mujer = 0
+                if (mRadioButtonFemale.isChecked()){
+                    gender = false;
+                }
+                boolean isFeeling = false;
+                boolean isSchematic = pictogram.schematic;
+                for (String category : categories) {
+                    if (category.toLowerCase().contains("feeling") || category.toLowerCase().contains("qualifying adjective")) {
+                        isFeeling = true;
+                    }
+                }
+                for (String category : categories) {
+                    if (category.toLowerCase().contains("verb")) {
+                        isFeeling = false;
+                    }
+                }
+                if (isFeeling) {
+                    List<ArasaacModel.Keyword> keywords = pictogram.keywords;
+                    for (int i = 0; i < keywords.size(); i++) {
+                        String strKey = keywords.get(i).keyword;
+                        if (gender) {
+                            if ((strKey.endsWith("e") || strKey.endsWith("es")) || (strKey.endsWith("o") || strKey.endsWith("os")) && !isSchematic) {
+                                mResults.add(pictogram);
+                                Log.d(TAG,pictogram.toString());
+                            }
+                        }
+                        else {
+                            if ((strKey.endsWith("e") || strKey.endsWith("es")) || (strKey.endsWith("a") || strKey.endsWith("as")) && !isSchematic) {
+                                mResults.add(pictogram);
+                                Log.d(TAG,pictogram.toString());
+                            }
+                        }
+                    }
+                }
+                else {
+                    mResults.add(pictogram);
+                    Log.d(TAG,"LOL");
+                    Log.d(TAG,pictogram.toString());
+                }
+
             }
             // notify data change to adapter (refresh the UI)
             mAdapter.notifyDataSetChanged();
